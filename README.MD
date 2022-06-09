@@ -1,3 +1,18 @@
+## Prerequisites
+What is needed in order to use this repo:
+- A computer/vm with Linux or Linux Subsystem installed on windows
+- Terraform installed on your OS
+- local clone of the repository available on your device
+- aws cli installed and configured - How to: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html You need to provide AWS Access Key ID and Secret Access Key - here's how to generate this https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html
+- AWS EC2 key pair generated and private key stored on your drive - here's how https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html. Default path to the private key is "~/.ssh/appsilon_homework.pem". You can change it (along with other variables declared in variables.tf) by providing the variable values in other ways described in this article: https://www.terraform.io/language/values/variables
+
+## Execution instructions
+Change the working directory to the location of local copy of this repository.
+Run "terraform init" to initialize working directory after cloning from git repo.
+Run terraform plan. Make sure the final configuration is matching your expectations.
+Run terraform apply to create the solution on AWS platform.
+Run terraform output to get the url of rstudio-connect.
+Run terraform destroy when you want to get rid of the solution.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

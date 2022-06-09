@@ -143,3 +143,7 @@ resource "aws_instance" "appsilon_homework" {
     host        = aws_instance.appsilon_homework.public_ip
   }
 }
+
+output "instance_public_dns" {
+  value = aws_instance.appsilon_homework.public_dns
+}
