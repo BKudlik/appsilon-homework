@@ -56,5 +56,7 @@ No modules.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_instance_public_dns"></a> [instance\_public\_dns](#output\_instance\_public\_dns) | n/a |
 <!-- END_TF_DOCS -->
