@@ -49,37 +49,64 @@ resource "aws_internet_gateway" "appsilon_gw" {
     Name = "appsilon_gw"
   }
 }
-
-resource "aws_route_table" "appsilon_route_table" {
-  vpc_id = aws_vpc.appsilon_vpc.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.appsilon_gw.id
-  }
-}
-
 resource "aws_route" "appsilon_route" {
-  route_table_id         = aws_route_table.appsilon_route_table.id
+  route_table_id         = aws_vpc.appsilon_vpc.default_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.appsilon_gw.id
 }
 
-# resource "aws_network_interface" "eth0" {
-#   subnet_id   = aws_subnet.appsilon_subnet.id
-#   private_ips = ["172.31.0.100"]
+resource "aws_security_group" "appsilon_homework" {
+  name        = "appsilon_homework"
+  description = "Allow all necessary traffic"
+  vpc_id      = aws_vpc.appsilon_vpc.id
 
-#   tags = {
-#     Name = "primary_network_interface"
-#   }
-# }
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr
+  }
 
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr
+  }
+
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr
+  }
+
+  ingress {
+    description = "ICMP"
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr
+  }
+
+  egress {
+    description = "Default AWS egress rule"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr
+  }
+}
 resource "aws_instance" "appsilon_homework" {
   ami                         = var.aws_ami
   instance_type               = var.aws_instance_type
   key_name                    = var.aws_key_name
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.appsilon_subnet.id
+  vpc_security_group_ids      = [aws_security_group.appsilon_homework.id]
   metadata_options {
     http_tokens   = "required"
     http_endpoint = "enabled"
