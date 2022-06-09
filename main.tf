@@ -65,14 +65,14 @@ resource "aws_route" "appsilon_route" {
   gateway_id             = aws_internet_gateway.appsilon_gw.id
 }
 
-resource "aws_network_interface" "eth0" {
-  subnet_id   = aws_subnet.appsilon_subnet.id
-  private_ips = ["172.31.0.100"]
+# resource "aws_network_interface" "eth0" {
+#   subnet_id   = aws_subnet.appsilon_subnet.id
+#   private_ips = ["172.31.0.100"]
 
-  tags = {
-    Name = "primary_network_interface"
-  }
-}
+#   tags = {
+#     Name = "primary_network_interface"
+#   }
+# }
 
 resource "aws_instance" "appsilon_homework" {
   ami                         = var.aws_ami
@@ -80,15 +80,16 @@ resource "aws_instance" "appsilon_homework" {
   key_name                    = var.aws_key_name
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.appsilon_subnet.id
-
+  metadata_options {
+    http_tokens   = "required"
+    http_endpoint = "enabled"
+  }
+  root_block_device {
+    encrypted = true
+  }
   depends_on = [
     aws_internet_gateway.appsilon_gw
   ]
-
-  # network_interface {
-  #   network_interface_id = aws_network_interface.eth0.id
-  #   device_index         = 0
-  # }
 
   credit_specification {
     cpu_credits = "unlimited"
@@ -97,7 +98,7 @@ resource "aws_instance" "appsilon_homework" {
   tags = {
     Name = "appsilon_homework"
   }
-    provisioner "file" {
+  provisioner "file" {
     source      = "install.sh"
     destination = "/tmp/install.sh"
   }
@@ -112,6 +113,6 @@ resource "aws_instance" "appsilon_homework" {
   connection {
     user        = var.INSTANCE_USERNAME
     private_key = file("${var.PATH_TO_PRIVATE_KEY}")
-    host = aws_instance.appsilon_homework.public_ip
+    host        = aws_instance.appsilon_homework.public_ip
   }
 }
