@@ -145,5 +145,6 @@ resource "aws_instance" "appsilon_homework" {
 }
 
 output "instance_public_dns" {
-  value = aws_instance.appsilon_homework.public_dns
+  value       = aws_instance.appsilon_homework.public_dns
+  description = "Public DNS instance address - rstudio-connect URL"
 }

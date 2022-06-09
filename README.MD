@@ -58,5 +58,5 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_instance_public_dns"></a> [instance\_public\_dns](#output\_instance\_public\_dns) | n/a |
+| <a name="output_instance_public_dns"></a> [instance\_public\_dns](#output\_instance\_public\_dns) | Public DNS instance address - rstudio-connect URL |
 <!-- END_TF_DOCS -->
